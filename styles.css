@@ -5,7 +5,7 @@
   color: var(--text-secondary, #94a3b8);
   font-size: 0.9em;
   margin-left: 4px;
-  cursor: help;
+  cursor: default;
 }
 
 .cursor-cost-badge-inline::before {

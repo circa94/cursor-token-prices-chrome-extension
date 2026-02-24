@@ -46,9 +46,7 @@
           try {
             const data = extractEvents(await response.clone().json());
             dispatchData(data);
-          } catch (e) {
-            console.error('[Cursor Token Prices] Error processing fetch:', e);
-          }
+          } catch (e) {}
         }
         return response;
       };
@@ -70,9 +68,7 @@
             if (xhr.readyState === 4 && xhr.status === 200) {
               try {
                 dispatchData(extractEvents(JSON.parse(xhr.responseText)));
-              } catch (e) {
-                console.error('[Cursor Token Prices] Error processing XHR:', e);
-              }
+              } catch (e) {}
             }
           };
 

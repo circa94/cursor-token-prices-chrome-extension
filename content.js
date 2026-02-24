@@ -2,12 +2,13 @@
 (function () {
   'use strict';
 
-  const store = { events: [], totalEvents: 0, totalCostCents: 0 };
+  const store = { events: [] };
   const assignedEvents = new Set();
   const processedRows = new Set();
 
   const formatCents = (cents) => {
     if (cents == null) return '-';
+    if (cents === 0) return '$0.00';
     const dollars = cents / 100;
     return dollars < 0.01 ? `$${dollars.toFixed(3)}` : `$${dollars.toFixed(2)}`;
   };
@@ -69,8 +70,9 @@
           const ev = findMatchingEvent(row.textContent || '', idx);
           if (!ev) return;
 
-          const cost = ev.tokenUsage?.totalCents || 0;
-          if (!cost) return;
+          const tokenUsage = ev.tokenUsage;
+          if (!tokenUsage) return;
+          const cost = tokenUsage.totalCents ?? 0;
 
           const cells = row.querySelectorAll('[role="cell"], .dashboard-table-cell');
           const costCell = cells[cells.length - 1];
@@ -79,14 +81,6 @@
           const badge = document.createElement('span');
           badge.className = 'cursor-cost-badge-inline';
           badge.textContent = formatCents(cost);
-          badge.title = [
-            `Model: ${ev.model}`,
-            `Input: ${(ev.tokenUsage?.inputTokens || 0).toLocaleString()}`,
-            `Output: ${(ev.tokenUsage?.outputTokens || 0).toLocaleString()}`,
-            `Cache: ${(ev.tokenUsage?.cacheReadTokens || 0).toLocaleString()}`,
-            '',
-            `Total: ${ev.tokenUsage?.totalCents} cents`,
-          ].join('\n');
 
           costCell.appendChild(badge);
           processedRows.add(rowId);
@@ -125,8 +119,6 @@
     if (!events.length) return;
 
     store.events = events;
-    store.totalEvents = data.totalEvents || data.totalUsageEventsCount || events.length;
-    store.totalCostCents = events.reduce((sum, e) => sum + (e.tokenUsage?.totalCents || 0), 0);
 
     watchForTableChanges();
   };
