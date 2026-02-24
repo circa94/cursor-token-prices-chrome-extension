@@ -3,8 +3,10 @@
   'use strict';
 
   const store = { events: [] };
-  const assignedEvents = new Set();
-  const processedRows = new Set();
+  let assignedEvents = new Set();
+  let processedRows = new Set();
+  let observer = null;
+  let retryInterval = null;
 
   const formatCents = (cents) => {
     if (cents == null) return '-';
@@ -88,27 +90,35 @@
       });
   };
 
+  const resetState = () => {
+    assignedEvents = new Set();
+    processedRows = new Set();
+    document.querySelectorAll('.cursor-cost-badge-inline').forEach((el) => el.remove());
+  };
+
   const watchForTableChanges = () => {
     injectIntoTable();
 
-    const observer = new MutationObserver((mutations) => {
-      const shouldInject = mutations.some((m) =>
-        Array.from(m.addedNodes).some(
-          (n) =>
-            n.nodeType === Node.ELEMENT_NODE &&
-            (n.matches?.('[role="row"], .dashboard-table-row') ||
-              n.querySelector?.('[role="row"], .dashboard-table-row'))
-        )
-      );
-      if (shouldInject) injectIntoTable();
-    });
+    if (!observer) {
+      observer = new MutationObserver((mutations) => {
+        const shouldInject = mutations.some((m) =>
+          Array.from(m.addedNodes).some(
+            (n) =>
+              n.nodeType === Node.ELEMENT_NODE &&
+              (n.matches?.('[role="row"], .dashboard-table-row') ||
+                n.querySelector?.('[role="row"], .dashboard-table-row'))
+          )
+        );
+        if (shouldInject) injectIntoTable();
+      });
+      observer.observe(document.body, { childList: true, subtree: true });
+    }
 
-    observer.observe(document.body, { childList: true, subtree: true });
-
+    if (retryInterval) clearInterval(retryInterval);
     let attempts = 0;
-    const interval = setInterval(() => {
+    retryInterval = setInterval(() => {
       injectIntoTable();
-      if (++attempts >= 10) clearInterval(interval);
+      if (++attempts >= 10) clearInterval(retryInterval);
     }, 500);
   };
 
@@ -118,6 +128,7 @@
     const events = data.events || data.usageEventsDisplay || [];
     if (!events.length) return;
 
+    resetState();
     store.events = events;
 
     watchForTableChanges();
