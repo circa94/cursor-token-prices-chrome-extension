@@ -7,6 +7,7 @@ Shows the actual API costs on the Cursor Usage page – even when included in yo
 - **Real costs**: Displays `totalCents` from the Cursor API
 - **"Included" usage**: Works with `USAGE_EVENT_KIND_INCLUDED_IN_ULTRA` and other plans
 - **Hover details**: Shows Input/Output/Cache tokens on mouseover
+<img width="986" height="1053" alt="image" src="https://github.com/user-attachments/assets/c5f95548-41bd-48e2-9874-6d4f2a2391ed" />
 
 ## Installation
 
