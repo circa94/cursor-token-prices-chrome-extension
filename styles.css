@@ -1,0 +1,24 @@
+/* Cursor Token Prices Extension - Inline Table Styles */
+
+.cursor-cost-badge-inline {
+  display: inline;
+  color: var(--text-secondary, #94a3b8);
+  font-size: 0.9em;
+  margin-left: 4px;
+  cursor: help;
+}
+
+.cursor-cost-badge-inline::before {
+  content: '(';
+}
+
+.cursor-cost-badge-inline::after {
+  content: ')';
+}
+
+@media (max-width: 768px) {
+  .cursor-cost-badge-inline {
+    font-size: 10px;
+    margin-left: 4px;
+  }
+}
