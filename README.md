@@ -2,7 +2,7 @@
 
 Shows the actual API costs on the Cursor Usage page – even when included in your current plan. Costs appear as inline text in the usage table and update automatically when day filters are applied.
 
-<img width="986" height="1053" alt="image" src="https://github.com/user-attachments/assets/c5f95548-41bd-48e2-9874-6d4f2a2391ed" />
+<img width="976" height="661" alt="image" src="https://github.com/user-attachments/assets/e104ff3c-989a-4e73-b608-28515aa8c71d" />
 
 ## How it works
 
